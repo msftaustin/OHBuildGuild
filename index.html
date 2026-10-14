@@ -339,9 +339,21 @@
             </article>
             <article class="session-card" data-origin="guild" data-type="session" data-date="2026-10-13T12:00" data-search="oh build guild session upcoming october derek brunn microsoft foundry github copilot models agent service agent framework live demo">
               <p class="card-origin"><span class="origin-dot" aria-hidden="true"></span>OH Build Guild session</p>
-              <div class="session-top"><div class="date-block">October 2026<b>13</b></div><span class="tag">Upcoming</span></div>
-              <div class="session-content"><h3>From Foundry to GitHub Copilot: Build &amp; Extend an AI Agent</h3><p>Join Derek Brunn for a practical, end-to-end look at Microsoft Foundry. We'll explore the platform, connect Foundry to GitHub Copilot to work with Foundry models, and then use GitHub Copilot with Microsoft Agent Framework to extend an Agent Service agent.</p></div>
-              <div class="session-footer"><span>45 min · Live demo</span><a href="https://teams.microsoft.com/meet/226983371980772?p=GbySF1cXcbKJGVYHkW" target="_blank" rel="noreferrer">Join session ↗</a></div>
+              <div class="session-top"><div class="date-block">October 2026<b>13</b></div><span class="tag">Recap coming soon</span></div>
+              <div class="session-content"><h3>From Foundry to GitHub Copilot: Build &amp; Extend an AI Agent</h3><p>Derek Brunn led a practical, end-to-end look at Microsoft Foundry, connecting Foundry to GitHub Copilot and using Microsoft Agent Framework to extend an Agent Service agent. Meeting notes and recap coming soon.</p></div>
+              <div class="session-footer"><span>Session held · Recap coming soon</span></div>
+            </article>
+            <article class="session-card" data-origin="guild" data-type="session" data-date="2026-11-10T12:00" data-search="oh build guild session november hydrafusion github universe recap announcements demos q&a kenedy thorne">
+              <p class="card-origin"><span class="origin-dot" aria-hidden="true"></span>OH Build Guild session</p>
+              <div class="session-top"><div class="date-block">November 2026<b>10</b></div><span class="tag">Upcoming</span></div>
+              <div class="session-content"><h3>Hydrafusion &amp; GitHub Universe Recap</h3><p>Join Kenedy Thorne for a recap of Hydrafusion and GitHub Universe announcements, with additional demos to be announced and time for Q&amp;A.</p></div>
+              <div class="session-footer"><span>2:30 PM ET · Kenedy Thorne</span><a href="https://teams.microsoft.com/meet/226983371980772?p=GbySF1cXcbKJGVYHkW" target="_blank" rel="noreferrer">Join session ↗</a></div>
+            </article>
+            <article class="session-card" data-origin="guild" data-type="session" data-date="2026-12-07T12:00" data-search="oh build guild session december iq story austin libal">
+              <p class="card-origin"><span class="origin-dot" aria-hidden="true"></span>OH Build Guild session</p>
+              <div class="session-top"><div class="date-block">December 2026<b>7</b></div><span class="tag">Upcoming</span></div>
+              <div class="session-content"><h3>The IQ Story</h3><p>Join Austin Libal for a deeper-dive session focused on the IQ story.</p></div>
+              <div class="session-footer"><span>2:30 PM ET · Austin Libal</span><a href="https://teams.microsoft.com/meet/226983371980772?p=GbySF1cXcbKJGVYHkW" target="_blank" rel="noreferrer">Join session ↗</a></div>
             </article>
             <article class="session-card" data-origin="external" data-type="showcase" data-date="2026-10-12T11:30" data-search="external event github copilot token optimization webinar usage based billing budgets ai credits canarys">
               <p class="card-origin"><span class="origin-dot" aria-hidden="true"></span>External event · Canarys</p>
@@ -497,10 +509,18 @@
         return Number.isNaN(value) ? -Infinity : value;
       }
       function sortSessions() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const ordered = Array.from(grid.querySelectorAll(".session-card")).sort((a, b) => {
           const sessionDiff = Number(isSessionCard(b)) - Number(isSessionCard(a));
           if (sessionDiff) return sessionDiff;
-          return isSessionCard(a) ? cardTime(b) - cardTime(a) : cardTime(a) - cardTime(b);
+          if (!isSessionCard(a)) return cardTime(a) - cardTime(b);
+          const aTime = cardTime(a);
+          const bTime = cardTime(b);
+          const aUpcoming = new Date(aTime).setHours(0, 0, 0, 0) >= today.getTime();
+          const bUpcoming = new Date(bTime).setHours(0, 0, 0, 0) >= today.getTime();
+          if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+          return aUpcoming ? aTime - bTime : bTime - aTime;
         });
         ordered.forEach((card) => grid.appendChild(card));
         return ordered;
